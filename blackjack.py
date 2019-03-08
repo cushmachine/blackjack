@@ -117,9 +117,9 @@ def main():
     # # Generates discard pile
     # discard_pile = Deck()
 
-    # # Sets player starting scores at default of zero
-    # npc1_game_score = 0
-    # player_game_score = 0
+    # Sets player starting scores at default of zero
+    npc1_game_score = 0
+    player_game_score = 0
 
     # Displays welcome message and initial choice
     print "\nWecome to the blackjack table!"
