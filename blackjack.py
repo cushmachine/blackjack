@@ -142,13 +142,10 @@ def main():
     print "\nMy name is Griph. I'll be your dealer."
 
     game_active = True
-    round_counter = 1
-
+    round_counter = 0
 
     # Generates top-level player choice menu
     while game_active:
-
-        # Per casino rules, with 1 player, cards are shuffled every 5 rounds.
 
         action = raw_input("\nWhat would you like to do? \n \
                             \n[A] Play a hand \
@@ -156,6 +153,8 @@ def main():
                             \n[C] Exit \n > ").upper()
 
         if action == 'A':
+
+            # Per casino rules, with 1 player, cards are shuffled every 5 rounds.
             round_counter +=1
             if round_counter >= 5:
                 print "\nReshuffling deck..."
@@ -163,13 +162,16 @@ def main():
                 game_deck.shuffle_stack()
                 round_counter = 1
 
+            # Initiates hand
             setup_hand(game_deck, discard_pile, dealer, player)
 
         elif action == 'B':
+            # Prints scores
             dealer.print_score()
             player.print_score()
 
         elif action == 'C':
+            # Exits program with departure message
             print "\nBye now!"
             game_active = False
         else:

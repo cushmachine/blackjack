@@ -35,7 +35,7 @@ class cardStack(object):
     A cardStack is a collection of Cards. Special cases of a cardStack might
     include a "hand", a "deck", a "discard pile", and so on. We think of all of
     these things as having similar properties, such as the ability to shuffle,
-    add cards, deal cards, merge, etc..
+    add cards, deal cards, merge, etc.
     '''
 
     def __init__(self):
@@ -140,9 +140,6 @@ class Player(object):
 
 
 
-#deck.handle_ace()
-
-
 ''''
 # TODOS FOR PIMPED-OUT VERSION #
 
@@ -169,9 +166,6 @@ added to the deck when the deck runs low.
 
 - Implement error handling when user types in an incorrect option when playing
 a hand (i.e. doesn't just default to 'stand')
-
-
-
 
 
 # RESOURCES #
