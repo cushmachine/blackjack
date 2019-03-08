@@ -148,9 +148,6 @@ class Player(object):
 
 - Allow game to be played with 1 to 5 NPC players
 
-- Implement error handling when user types in an incorrect option when playing
-a hand (i.e. doesn't just default to 'stand')
-
 - Implement blackjack casino rules (cut cards,doubling down, etc.)
 
 - Implement betting system
@@ -170,6 +167,8 @@ added to the deck when the deck runs low.
 
 - Fix handling of Ace scoring
 
+- Implement error handling when user types in an incorrect option when playing
+a hand (i.e. doesn't just default to 'stand')
 
 
 

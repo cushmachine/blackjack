@@ -49,18 +49,23 @@ def play_hand(deck, discard_pile, hand1, hand2, dealer, player):
     while hand_active:
 
         # Player's turn
-        action = raw_input("\nWhat would you like to do?\
-                            \n[A] Hit \
-                            \n[B] Stand \n> ").upper()
-        if action == 'A':
-            deck.deal_stack(player_hand,1)
-            player_hand_score = player_hand.tally_stack()
-        elif action == 'B':
-            player_stand = True
-        else:
-            # For lack of a better thing to do, we default to mistype = stand
-            print "Sorry, I couldn't hear you. Did you say 'stand'?"
-            player_stand = True
+        valid_response = False
+
+        while valid_response == False:
+            action = raw_input("\nWhat would you like to do?\
+                                \n[A] Hit \
+                                \n[B] Stand \n> ").upper()
+            if action == 'A':
+                valid_response = True
+                deck.deal_stack(player_hand,1)
+                player_hand_score = player_hand.tally_stack()
+            elif action == 'B':
+                valid_response = True
+                player_stand = True
+            else:
+                # For lack of a better thing to do, we default to mistype = stand
+                print "Sorry, I didn't catch that. Try typing 'A' or 'B'."
+                # player_stand = True
 
         # Dealer plays - simple ruleset hits on 16, stands on 17
         if dealer_hand_score < 17:
@@ -144,13 +149,6 @@ def main():
     while game_active:
 
         # Per casino rules, with 1 player, cards are shuffled every 5 rounds.
-        round_counter +=1
-
-        if round_counter >= 5:
-            print "\nReshuffling deck..."
-            discard_pile.deal_stack(game_deck,discard_pile.count_stack())
-            game_deck.shuffle_stack()
-            round_counter = 1
 
         action = raw_input("\nWhat would you like to do? \n \
                             \n[A] Play a hand \
@@ -158,7 +156,15 @@ def main():
                             \n[C] Exit \n > ").upper()
 
         if action == 'A':
+            round_counter +=1
+            if round_counter >= 5:
+                print "\nReshuffling deck..."
+                discard_pile.deal_stack(game_deck,discard_pile.count_stack())
+                game_deck.shuffle_stack()
+                round_counter = 1
+
             setup_hand(game_deck, discard_pile, dealer, player)
+
         elif action == 'B':
             dealer.print_score()
             player.print_score()
