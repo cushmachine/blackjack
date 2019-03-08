@@ -30,33 +30,41 @@ class Card(object):
         print("The %s of %s") % (self.rank, self.suit)
 
 
-class Deck(Card):
+class cardStack(object):
+    '''
+    A cardStack is a collection of Cards. Special cases of a cardStack might
+    include a "hand", a "deck", a "discard pile", etc. We think of all of these
+    things as having similar properties, e.g. the ability to shuffle,
+    add cards, remove cards (or deal), and merge.
+    '''
 
     def __init__(self):
-        self.deck = []
+        self.stack = []
+
+    def generate_standard_deck(self):
 
         RANKS = ('2', '3', '4', '5', '6', '7','8','9','10','Jack','Queen','King','Ace')
         SUITS = ('Clubs', 'Diamonds', 'Hearts', 'Spades')
 
         for suit in SUITS:
             for rank in RANKS:
-                self.deck.append(Card(rank,suit))
+                self.stack.append(Card(rank,suit))
 
-    def print_deck(self):
+    def print_stack(self):
         '''
         Prints out a sequential list of all cards in the deck. Note that
         we consider the last card on the list to be the "top."
         '''
-        for i in range(0,len(self.deck)):
-            self.deck[i].print_card()
+        for i in range(0,len(self.stack)):
+            self.stack[i].print_card()
 
-        print "There are %d cards in the deck." % len(self.deck)
+        print "There are %d cards in the stack." % len(self.stack)
 
-    def shuffle_deck(self):
+    def shuffle_stack(self):
         '''
         Shuffles the deck.
         '''
-        random.shuffle(self.deck)
+        random.shuffle(self.stack)
 
     def deal_cards(self,count):
         '''
@@ -67,9 +75,9 @@ class Deck(Card):
         i = 0
         dealt_cards = []
 
-        if len(self.deck)>count:
+        if len(self.stack)>count:
             while i < count:
-                dealt_cards.append(self.deck.pop())
+                dealt_cards.append(self.stack.pop())
                 i += 1
 
             return dealt_cards
@@ -85,38 +93,20 @@ class Deck(Card):
 
         # Should probably add some guardrails to prevent object of the wrong
         # type from being added
-        self.deck.extend(cards)
+        self.stack.extend(cards)
 
-
-class Hand(Deck):
-
-    def __init__(self):
-        self.hand = []
-
-    def add_cards(self,cards):
+    def tally_stack(self):
         '''
-        Takes a list of Cards and adds a list of other Cards
-        '''
-        self.hand.extend(cards)
-
-    def print_hand(self):
-        '''
-        Prints out the contents of the current hand.
-        '''
-        for i in range(0,len(self.hand)):
-            self.hand[i].print_card()
-
-    def tally_hand(self):
-        '''
-        Sum the points value of all cards in a hand (using blackjack values)
+        Sum the points value of all cards in a stack (using blackjack values)
         '''
 
         tally = 0
 
-        for i in range(0,len(self.hand)):
-            tally += self.hand[i].card_value()
+        for i in range(0,len(self.stack)):
+            tally += self.stack[i].card_value()
 
         return tally
+
 
 class Player(object):
 
@@ -144,23 +134,19 @@ class Player(object):
         print "%s has won %d out of %d rounds" % (self.name, self.wins, self.rounds)
 
 
-p1 = Player("Griph")
-
-p1.print_score()
-
-
 
 ''''
 # TODO #
-- Create Player class with name and score
 - Make it so cards played go into the discard pile, which gets shuffled and re-
 added to the deck when the deck runs low.
-
-
-- Make it so the game can be played with an arbitrary number of AI players
+- Fix handling of Ace scoring
+- Allow game to be played with 1 to 5 NPC players
+- Use decorators (?) to create a special "Dealer" player
 - Implement error handling when user types in an incorrect option when playing
 a hand (i.e. doesn't just default to 'stand')
 
+# DONE #
+- Merged concepts of "hand" and "deck" for simplicity
 
 # RESOURCES #
 https://www.youtube.com/watch?v=ZDa-Z5JzLYM

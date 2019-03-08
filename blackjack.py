@@ -3,11 +3,11 @@
 
 from cards import *
 
-def setup_hand(deck, npc1, player):
+def setup_hand(deck, discard_pile, npc1, player):
 
     # Generate hands
-    npc1_hand = Hand()
-    player_hand = Hand()
+    npc1_hand = cardStack()
+    player_hand = cardStack()
 
     # Sets variables as players
     x = npc1
@@ -20,27 +20,27 @@ def setup_hand(deck, npc1, player):
     print "\nDealing..."
 
     # Deals
-    npc1_hand.add_cards(deck.deal_cards(2))
-    player_hand.add_cards(deck.deal_cards(2))
+    npc1_hand.add_cards_top(deck.deal_cards(2))
+    player_hand.add_cards_top(deck.deal_cards(2))
 
 
     # Deals Player and tallys hand; displays hand and point value to player
     print "\nYou were dealt:"
-    player_hand.print_hand()
-    print "\nYour point value is {}".format(player_hand.tally_hand())
+    player_hand.print_stack()
+    print "\nYour point value is {}".format(player_hand.tally_stack())
 
     # After initial hand is dealt, lets players actually play hand
-    play_hand(deck, npc1_hand, player_hand, npc1, player)
+    play_hand(deck, discard_pile, npc1_hand, player_hand, npc1, player)
 
-def play_hand(deck, hand1, hand2, npc1, player):
+def play_hand(deck, discard_pile, hand1, hand2, npc1, player):
 
     # Locally defines hands
     npc1_hand = hand1
     player_hand = hand2
 
     # Sets initial player hand point values
-    npc1_hand_score = npc1_hand.tally_hand()
-    player_hand_score = player_hand.tally_hand()
+    npc1_hand_score = npc1_hand.tally_stack()
+    player_hand_score = player_hand.tally_stack()
 
     # Sets starting conditions that may help trigger end of hand if flipped
     hand_active = True
@@ -54,8 +54,8 @@ def play_hand(deck, hand1, hand2, npc1, player):
                             \n[A] Hit \
                             \n[B] Stand \n> ").upper()
         if action == 'A':
-            player_hand.add_cards(deck.deal_cards(1))
-            player_hand_score = player_hand.tally_hand()
+            player_hand.add_cards_top(deck.deal_cards(1))
+            player_hand_score = player_hand.tally_stack()
         elif action == 'B':
             player_stand = True
         else:
@@ -65,16 +65,16 @@ def play_hand(deck, hand1, hand2, npc1, player):
 
         # NPC plays - simple ruleset hits on 16, stands on 17
         if npc1_hand_score < 17:
-            npc1_hand.add_cards(deck.deal_cards(1))
-            npc1_hand_score = npc1_hand.tally_hand()
+            npc1_hand.add_cards_top(deck.deal_cards(1))
+            npc1_hand_score = npc1_hand.tally_stack()
         else:
             npc1_stand = True
 
         # Displays output of round
         print "\nYour hand is now:"
-        player_hand.print_hand()
+        player_hand.print_stack()
         print "\nGriph's hand is now:"
-        npc1_hand.print_hand()
+        npc1_hand.print_stack()
         print "\nYour point value is {}".format(player_hand_score)
         print "Griph's point value is %d" % (npc1_hand_score)
 
@@ -115,18 +115,20 @@ def play_hand(deck, hand1, hand2, npc1, player):
         # ... and want to keep playing
             else:
                 print "You're both still in it."
-                play_hand(deck, npc1_hand, player_hand, npc1, player)
+                play_hand(deck, discard_pile, hand1, hand2, npc1, player)
                 hand_active = False
+
 
 
 def main():
 
     # Generates and shuffles game deck
-    game_deck = Deck()
-    game_deck.shuffle_deck()
+    game_deck = cardStack()
+    game_deck.generate_standard_deck()
+    game_deck.shuffle_stack()
 
-    # # Generates discard pile
-    # discard_pile = Deck()
+    # Generates discard pile
+    discard_pile = cardStack()
 
     # Generates players
     npc1 = Player("Griph")
@@ -147,7 +149,7 @@ def main():
                             \n[C] Exit \n > ").upper()
 
         if action == 'A':
-            setup_hand(game_deck, npc1, player)
+            setup_hand(game_deck, discard_pile, npc1, player)
         elif action == 'B':
             npc1.print_score()
             player.print_score()
