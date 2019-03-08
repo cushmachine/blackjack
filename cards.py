@@ -33,9 +33,9 @@ class Card(object):
 class cardStack(object):
     '''
     A cardStack is a collection of Cards. Special cases of a cardStack might
-    include a "hand", a "deck", a "discard pile", etc. We think of all of these
-    things as having similar properties, e.g. the ability to shuffle,
-    add cards, remove cards (or deal), and merge.
+    include a "hand", a "deck", a "discard pile", and so on. We think of all of
+    these things as having similar properties, such as the ability to shuffle,
+    add cards, deal cards, merge, etc..
     '''
 
     def __init__(self):
@@ -70,22 +70,18 @@ class cardStack(object):
         for i in range(0,len(self.stack)):
             self.stack[i].print_card()
 
-    def deal_cards(self,count):
+    def deal_cards(self,target_stack,count):
         '''
         Pops a given number of cards off the top of the deck and returns them
         as a list. Note that we consider the last card on the list to be the "top."
         '''
 
         i = 0
-        dealt_cards = []
 
-        if len(self.stack)>count:
+        if len(self.stack)>=count:
             while i < count:
-                dealt_cards.append(self.stack.pop())
+                target_stack.add_cards_top((self.stack.pop()))
                 i += 1
-
-            return dealt_cards
-
         else:
             print "Your deck doesn't have enough cards, yo."
 
@@ -97,20 +93,7 @@ class cardStack(object):
 
         # Should probably add some guardrails to prevent object of the wrong
         # type from being added
-        self.stack.extend(cards)
-
-    def merge_stack(self,target):
-        '''
-        Taking a target STACK as input, combines the cards of target stack with
-        current stack.
-        '''
-
-        #self.stack.add_cards_top(target.deal_cards(count_stack))
-
-        pass
-
-
-
+        self.stack.append(cards)
 
     def tally_stack(self):
         '''
@@ -154,18 +137,32 @@ class Player(object):
 
 ''''
 # TODO #
-- Make it so that the cardStack method "deal" takes another cardStack as an
-input. You shouldn't be able to just deal cards into oblivion.
+
+- Turn Griph into a dealer who wins ties.
+
 - Make it so cards played go into the discard pile, which gets shuffled and re-
 added to the deck when the deck runs low.
+
 - Fix handling of Ace scoring
+
 - Allow game to be played with 1 to 5 NPC players
-- Use decorators (?) to create a special "Dealer" player
+
+- Use decorators (?) to create a special "Dealer" player who wins ties.
+
 - Implement error handling when user types in an incorrect option when playing
 a hand (i.e. doesn't just default to 'stand')
 
+- Implement blackjack casino rules (cut cards,doubling down, etc.)
+
+- [MAYBE] Implement betting system
+
 # DONE #
 - Merged concepts of "hand" and "deck" for simplicity
+-- Make it so that the cardStack method "deal" takes another cardStack as an
+input. You shouldn't be able to just deal cards into oblivion / as currently
+implemented, it's not clear what you are supposed to do with dealt cards.
+
+
 
 # RESOURCES #
 https://www.youtube.com/watch?v=ZDa-Z5JzLYM

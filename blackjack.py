@@ -9,20 +9,15 @@ def setup_hand(deck, discard_pile, npc1, player):
     npc1_hand = cardStack()
     player_hand = cardStack()
 
-    # Sets variables as players
-    x = npc1
-    y = player
-
     # Adds a round to each player's round count
     npc1.add_round()
     player.add_round()
 
     print "\nDealing..."
 
-    # Deals
-    npc1_hand.add_cards_top(deck.deal_cards(2))
-    player_hand.add_cards_top(deck.deal_cards(2))
-
+    # Deals hands
+    deck.deal_cards(npc1_hand,2)
+    deck.deal_cards(player_hand,2)
 
     # Deals Player and tallys hand; displays hand and point value to player
     print "\nYou were dealt:"
@@ -55,7 +50,7 @@ def play_hand(deck, discard_pile, hand1, hand2, npc1, player):
                             \n[A] Hit \
                             \n[B] Stand \n> ").upper()
         if action == 'A':
-            player_hand.add_cards_top(deck.deal_cards(1))
+            deck.deal_cards(player_hand,1)
             player_hand_score = player_hand.tally_stack()
         elif action == 'B':
             player_stand = True
@@ -66,7 +61,7 @@ def play_hand(deck, discard_pile, hand1, hand2, npc1, player):
 
         # NPC plays - simple ruleset hits on 16, stands on 17
         if npc1_hand_score < 17:
-            npc1_hand.add_cards_top(deck.deal_cards(1))
+            deck.deal_cards(npc1_hand,1)
             npc1_hand_score = npc1_hand.tally_stack()
         else:
             npc1_stand = True
@@ -161,3 +156,14 @@ def main():
 
 
 main()
+
+
+'''
+Casino shuffling rules:
+- Every 5 rounds with 1 person
+- Every 4 rounds with 2 ppl
+- Every 3 rounds with 3 ppl
+- Every 2 rounds with 4+ ppl
+
+
+'''
