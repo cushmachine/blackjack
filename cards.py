@@ -139,35 +139,22 @@ class Player(object):
         print "%s has won %d out of %d rounds" % (self.name, self.wins, self.rounds)
 
 
-card1 = Card('Ace','Spades')
-card2 = Card('10','Clubs')
-card3 = Card('Ace','Diamonds')
-deck = cardStack()
-
-deck.add_cards_top(card1)
-deck.add_cards_top(card2)
-deck.add_cards_top(card3)
-
-#deck.print_stack()
-print deck.tally_stack()
-
 
 #deck.handle_ace()
 
 
 ''''
-# TODO #
+# TODOS FOR PIMPED-OUT VERSION #
 
 - Allow game to be played with 1 to 5 NPC players
-
-- Use decorators (?) to create a special "Dealer" player who wins ties.
 
 - Implement error handling when user types in an incorrect option when playing
 a hand (i.e. doesn't just default to 'stand')
 
 - Implement blackjack casino rules (cut cards,doubling down, etc.)
 
-- [MAYBE] Implement betting system
+- Implement betting system
+
 
 # DONE #
 - Merged concepts of "hand" and "deck" for simplicity

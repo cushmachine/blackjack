@@ -13,9 +13,8 @@ def setup_hand(deck, discard_pile, dealer, player):
     dealer.add_round()
     player.add_round()
 
-    print "\nDealing..."
-
     # Deals hands
+    print "\nDealing..."
     deck.deal_stack(dealer_hand,2)
     deck.deal_stack(player_hand,2)
 
@@ -27,12 +26,9 @@ def setup_hand(deck, discard_pile, dealer, player):
     # After initial hand is dealt, lets players actually play hand
     play_hand(deck, discard_pile, dealer_hand, player_hand, dealer, player)
 
+    # After hand is complete, adds hands to the discard pile
     dealer_hand.deal_stack(discard_pile, dealer_hand.count_stack())
     player_hand.deal_stack(discard_pile, player_hand.count_stack())
-    print "Printing discard pile..."
-    discard_pile.print_stack()
-    #print player_hand.count_stack()
-
 
 
 def play_hand(deck, discard_pile, hand1, hand2, dealer, player):
@@ -52,7 +48,7 @@ def play_hand(deck, discard_pile, hand1, hand2, dealer, player):
 
     while hand_active:
 
-        # Player plays
+        # Player's turn
         action = raw_input("\nWhat would you like to do?\
                             \n[A] Hit \
                             \n[B] Stand \n> ").upper()
@@ -66,7 +62,7 @@ def play_hand(deck, discard_pile, hand1, hand2, dealer, player):
             print "Sorry, I couldn't hear you. Did you say 'stand'?"
             player_stand = True
 
-        # NPC plays - simple ruleset hits on 16, stands on 17
+        # Dealer plays - simple ruleset hits on 16, stands on 17
         if dealer_hand_score < 17:
             deck.deal_stack(dealer_hand,1)
             dealer_hand_score = dealer_hand.tally_stack()
@@ -83,18 +79,18 @@ def play_hand(deck, discard_pile, hand1, hand2, dealer, player):
 
         # Assess winner of hand and display appropriate results
 
-        # NPC and player both bust
+        # Dealer and player both bust
         if player_hand_score > 21 and dealer_hand_score > 21:
             print "\nYou both went bust!"
             hand_active = False
 
-        # NPC busts, player is ok
+        # Dealer busts, player is ok
         elif player_hand_score <=21 and dealer_hand_score > 21:
             print "\nGriph when bust! You win this hand!"
             player.add_win()
             hand_active = False
 
-        # NPC is ok, player busts
+        # Dealer is ok, player busts
         elif player_hand_score > 21 and dealer_hand_score <= 21:
             print "\nYou went bust! Griph wins this one, kiddo."
             dealer.add_win()
@@ -151,7 +147,7 @@ def main():
         round_counter +=1
 
         if round_counter >= 5:
-            print "\nReshuffling deck..." % (round_counter)
+            print "\nReshuffling deck..."
             discard_pile.deal_stack(game_deck,discard_pile.count_stack())
             game_deck.shuffle_stack()
             round_counter = 1
