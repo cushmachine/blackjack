@@ -18,7 +18,7 @@ class Card(object):
 
     def card_value(self):
         value_dict = {'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9, \
-                      '10':10,'Jack':10,'Queen':10,'King':10 ,'Ace':11}
+                      '10':10,'Jack':10,'Queen':10,'King':10 ,'Ace':1}
 
         card_value = value_dict[self.rank]
         return card_value
@@ -105,6 +105,11 @@ class cardStack(object):
         for i in range(0,len(self.stack)):
             tally += self.stack[i].card_value()
 
+        for card in self.stack:
+            if card.rank == 'Ace':
+                if tally + 10 <= 21:
+                    tally = tally + 10
+
         return tally
 
 
@@ -134,11 +139,24 @@ class Player(object):
         print "%s has won %d out of %d rounds" % (self.name, self.wins, self.rounds)
 
 
+card1 = Card('Ace','Spades')
+card2 = Card('10','Clubs')
+card3 = Card('Ace','Diamonds')
+deck = cardStack()
+
+deck.add_cards_top(card1)
+deck.add_cards_top(card2)
+deck.add_cards_top(card3)
+
+#deck.print_stack()
+print deck.tally_stack()
+
+
+#deck.handle_ace()
+
 
 ''''
 # TODO #
-
-- Fix handling of Ace scoring
 
 - Allow game to be played with 1 to 5 NPC players
 
@@ -153,12 +171,18 @@ a hand (i.e. doesn't just default to 'stand')
 
 # DONE #
 - Merged concepts of "hand" and "deck" for simplicity
+
 - Make it so that the cardStack method "deal" takes another cardStack as an
 input. You shouldn't be able to just deal cards into oblivion / as currently
 implemented, it's not clear what you are supposed to do with dealt cards.
+
 - Turn Griph into a dealer who wins ties.
+
 - Make it so cards played go into the discard pile, which gets shuffled and re-
 added to the deck when the deck runs low.
+
+- Fix handling of Ace scoring
+
 
 
 
