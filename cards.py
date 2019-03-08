@@ -118,12 +118,46 @@ class Hand(Deck):
 
         return tally
 
+class Player(object):
+
+    def __init__(self, name="DefaultName", wins=0, rounds=0):
+        self.name = name
+        self.wins = wins
+        self.rounds = rounds
+
+    def add_round(self):
+        '''
+        Tallies that the player has engaged in a round of the game
+        '''
+        self.rounds +=1
+
+    def add_win(self):
+        '''
+        Tallies that the player has won a round of the game
+        '''
+        self.wins += 1
+
+    def print_score(self):
+        '''
+        Prints out player's win rate
+        '''
+        print "%s has won %d out of %d rounds" % (self.name, self.wins, self.rounds)
+
+
+p1 = Player("Griph")
+
+p1.print_score()
+
+
+
 ''''
 # TODO #
 - Create Player class with name and score
-- Make it so the game can be played with an arbitrary number of AI players
 - Make it so cards played go into the discard pile, which gets shuffled and re-
 added to the deck when the deck runs low.
+
+
+- Make it so the game can be played with an arbitrary number of AI players
 - Implement error handling when user types in an incorrect option when playing
 a hand (i.e. doesn't just default to 'stand')
 

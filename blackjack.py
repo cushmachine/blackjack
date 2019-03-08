@@ -3,29 +3,36 @@
 
 from cards import *
 
-def setup_hand(deck):
+def setup_hand(deck, npc1, player):
 
     # Generate hands
     npc1_hand = Hand()
     player_hand = Hand()
 
+    # Sets variables as players
+    x = npc1
+    y = player
+
+    # Adds a round to each player's round count
+    npc1.add_round()
+    player.add_round()
+
     print "\nDealing..."
 
-    # Deals NPC 1 and tallys hand
+    # Deals
     npc1_hand.add_cards(deck.deal_cards(2))
-    npc1_hand_score = npc1_hand.tally_hand()
+    player_hand.add_cards(deck.deal_cards(2))
+
 
     # Deals Player and tallys hand; displays hand and point value to player
-    player_hand.add_cards(deck.deal_cards(2))
-    player_hand_score = player_hand.tally_hand()
     print "\nYou were dealt:"
     player_hand.print_hand()
-    print "\nYour point value is {}".format(player_hand_score)
+    print "\nYour point value is {}".format(player_hand.tally_hand())
 
     # After initial hand is dealt, lets players actually play hand
-    play_hand(deck, npc1_hand, player_hand)
+    play_hand(deck, npc1_hand, player_hand, npc1, player)
 
-def play_hand(deck, hand1, hand2):
+def play_hand(deck, hand1, hand2, npc1, player):
 
     # Locally defines hands
     npc1_hand = hand1
@@ -81,11 +88,13 @@ def play_hand(deck, hand1, hand2):
         # NPC busts, player is ok
         elif player_hand_score <=21 and npc1_hand_score > 21:
             print "\nGriph when bust! You win this hand!"
+            player.add_win()
             hand_active = False
 
         # NPC is ok, player busts
         elif player_hand_score > 21 and npc1_hand_score <= 21:
             print "\nYou went bust! Griph wins this one, kiddo."
+            npc1.add_win()
             hand_active = False
 
         # NPC and Player both haven't bust yet...
@@ -96,15 +105,17 @@ def play_hand(deck, hand1, hand2):
                 % (npc1_hand_score, player_hand_score)
                 if npc1_hand_score > player_hand_score:
                     print "Griph wins!"
+                    npc1.add_win()
                 elif npc1_hand_score < player_hand_score:
                     print "You win!"
+                    player.add_win()
                 elif npc1_hand_score == player_hand_score:
                     print "You and Griph tie!"
                 hand_active = False
         # ... and want to keep playing
             else:
                 print "You're both still in it."
-                play_hand(deck, npc1_hand, player_hand)
+                play_hand(deck, npc1_hand, player_hand, npc1, player)
                 hand_active = False
 
 
@@ -117,9 +128,9 @@ def main():
     # # Generates discard pile
     # discard_pile = Deck()
 
-    # Sets player starting scores at default of zero
-    npc1_game_score = 0
-    player_game_score = 0
+    # Generates players
+    npc1 = Player("Griph")
+    player = Player("Ace")
 
     # Displays welcome message and initial choice
     print "\nWecome to the blackjack table!"
@@ -136,10 +147,10 @@ def main():
                             \n[C] Exit \n > ").upper()
 
         if action == 'A':
-            setup_hand(game_deck)
+            setup_hand(game_deck, npc1, player)
         elif action == 'B':
-            print "\nGriph's score is %d" % (npc1_game_score)
-            print "Your score is %d" % (player_game_score)
+            npc1.print_score()
+            player.print_score()
 
         elif action == 'C':
             print "\nBye now!"
