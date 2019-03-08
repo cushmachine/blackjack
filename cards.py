@@ -70,7 +70,7 @@ class cardStack(object):
         for i in range(0,len(self.stack)):
             self.stack[i].print_card()
 
-    def deal_cards(self,target_stack,count):
+    def deal_stack(self,target_stack,count):
         '''
         Pops a given number of cards off the top of the deck and returns them
         as a list. Note that we consider the last card on the list to be the "top."
@@ -138,11 +138,6 @@ class Player(object):
 ''''
 # TODO #
 
-- Turn Griph into a dealer who wins ties.
-
-- Make it so cards played go into the discard pile, which gets shuffled and re-
-added to the deck when the deck runs low.
-
 - Fix handling of Ace scoring
 
 - Allow game to be played with 1 to 5 NPC players
@@ -158,9 +153,14 @@ a hand (i.e. doesn't just default to 'stand')
 
 # DONE #
 - Merged concepts of "hand" and "deck" for simplicity
--- Make it so that the cardStack method "deal" takes another cardStack as an
+- Make it so that the cardStack method "deal" takes another cardStack as an
 input. You shouldn't be able to just deal cards into oblivion / as currently
 implemented, it's not clear what you are supposed to do with dealt cards.
+- Turn Griph into a dealer who wins ties.
+- Make it so cards played go into the discard pile, which gets shuffled and re-
+added to the deck when the deck runs low.
+
+
 
 
 

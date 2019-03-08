@@ -3,21 +3,21 @@
 
 from cards import *
 
-def setup_hand(deck, discard_pile, npc1, player):
+def setup_hand(deck, discard_pile, dealer, player):
 
     # Generate hands
-    npc1_hand = cardStack()
+    dealer_hand = cardStack()
     player_hand = cardStack()
 
     # Adds a round to each player's round count
-    npc1.add_round()
+    dealer.add_round()
     player.add_round()
 
     print "\nDealing..."
 
     # Deals hands
-    deck.deal_cards(npc1_hand,2)
-    deck.deal_cards(player_hand,2)
+    deck.deal_stack(dealer_hand,2)
+    deck.deal_stack(player_hand,2)
 
     # Deals Player and tallys hand; displays hand and point value to player
     print "\nYou were dealt:"
@@ -25,22 +25,29 @@ def setup_hand(deck, discard_pile, npc1, player):
     print "\nYour point value is {}".format(player_hand.tally_stack())
 
     # After initial hand is dealt, lets players actually play hand
-    play_hand(deck, discard_pile, npc1_hand, player_hand, npc1, player)
+    play_hand(deck, discard_pile, dealer_hand, player_hand, dealer, player)
+
+    dealer_hand.deal_stack(discard_pile, dealer_hand.count_stack())
+    player_hand.deal_stack(discard_pile, player_hand.count_stack())
+    print "Printing discard pile..."
+    discard_pile.print_stack()
+    #print player_hand.count_stack()
 
 
-def play_hand(deck, discard_pile, hand1, hand2, npc1, player):
+
+def play_hand(deck, discard_pile, hand1, hand2, dealer, player):
 
     # Locally defines hands
-    npc1_hand = hand1
+    dealer_hand = hand1
     player_hand = hand2
 
     # Sets initial player hand point values
-    npc1_hand_score = npc1_hand.tally_stack()
+    dealer_hand_score = dealer_hand.tally_stack()
     player_hand_score = player_hand.tally_stack()
 
     # Sets starting conditions that may help trigger end of hand if flipped
     hand_active = True
-    npc1_stand = False
+    dealer_stand = False
     player_stand = False
 
     while hand_active:
@@ -50,7 +57,7 @@ def play_hand(deck, discard_pile, hand1, hand2, npc1, player):
                             \n[A] Hit \
                             \n[B] Stand \n> ").upper()
         if action == 'A':
-            deck.deal_cards(player_hand,1)
+            deck.deal_stack(player_hand,1)
             player_hand_score = player_hand.tally_stack()
         elif action == 'B':
             player_stand = True
@@ -60,58 +67,59 @@ def play_hand(deck, discard_pile, hand1, hand2, npc1, player):
             player_stand = True
 
         # NPC plays - simple ruleset hits on 16, stands on 17
-        if npc1_hand_score < 17:
-            deck.deal_cards(npc1_hand,1)
-            npc1_hand_score = npc1_hand.tally_stack()
+        if dealer_hand_score < 17:
+            deck.deal_stack(dealer_hand,1)
+            dealer_hand_score = dealer_hand.tally_stack()
         else:
-            npc1_stand = True
+            dealer_stand = True
 
         # Displays output of round
         print "\nYour hand is now:"
         player_hand.print_stack()
         print "\nGriph's hand is now:"
-        npc1_hand.print_stack()
+        dealer_hand.print_stack()
         print "\nYour point value is {}".format(player_hand_score)
-        print "Griph's point value is %d" % (npc1_hand_score)
+        print "Griph's point value is %d" % (dealer_hand_score)
 
         # Assess winner of hand and display appropriate results
 
         # NPC and player both bust
-        if player_hand_score > 21 and npc1_hand_score > 21:
+        if player_hand_score > 21 and dealer_hand_score > 21:
             print "\nYou both went bust!"
             hand_active = False
 
         # NPC busts, player is ok
-        elif player_hand_score <=21 and npc1_hand_score > 21:
+        elif player_hand_score <=21 and dealer_hand_score > 21:
             print "\nGriph when bust! You win this hand!"
             player.add_win()
             hand_active = False
 
         # NPC is ok, player busts
-        elif player_hand_score > 21 and npc1_hand_score <= 21:
+        elif player_hand_score > 21 and dealer_hand_score <= 21:
             print "\nYou went bust! Griph wins this one, kiddo."
-            npc1.add_win()
+            dealer.add_win()
             hand_active = False
 
         # NPC and Player both haven't bust yet...
         # ... and stand
-        elif player_hand_score <= 21 and npc1_hand_score <= 21:
-            if npc1_stand == True and player_stand == True:
+        elif player_hand_score <= 21 and dealer_hand_score <= 21:
+            if dealer_stand == True and player_stand == True:
                 print "\nYou both stand. Griph has %d points. You have %d points." \
-                % (npc1_hand_score, player_hand_score)
-                if npc1_hand_score > player_hand_score:
-                    print "Griph wins!"
-                    npc1.add_win()
-                elif npc1_hand_score < player_hand_score:
+                % (dealer_hand_score, player_hand_score)
+                if dealer_hand_score > player_hand_score:
+                    print "Dealer wins!"
+                    dealer.add_win()
+                elif dealer_hand_score < player_hand_score:
                     print "You win!"
                     player.add_win()
-                elif npc1_hand_score == player_hand_score:
-                    print "You and Griph tie!"
+                elif dealer_hand_score == player_hand_score:
+                    print "You and Griph have the same score! Tie goes to the dealer."
+                    dealer.add_win()
                 hand_active = False
         # ... and want to keep playing
             else:
                 print "You're both still in it."
-                play_hand(deck, discard_pile, hand1, hand2, npc1, player)
+                play_hand(deck, discard_pile, hand1, hand2, dealer, player)
                 hand_active = False
 
 def main():
@@ -125,17 +133,28 @@ def main():
     discard_pile = cardStack()
 
     # Generates players
-    npc1 = Player("Griph")
+    dealer = Player("Griph")
     player = Player("Ace")
 
     # Displays welcome message and initial choice
     print "\nWecome to the blackjack table!"
-    print "\nYou're sitting with 1 other player: Griph."
+    print "\nMy name is Griph. I'll be your dealer."
 
     game_active = True
+    round_counter = 1
+
 
     # Generates top-level player choice menu
     while game_active:
+
+        # Per casino rules, with 1 player, cards are shuffled every 5 rounds.
+        round_counter +=1
+
+        if round_counter >= 5:
+            print "\nReshuffling deck..." % (round_counter)
+            discard_pile.deal_stack(game_deck,discard_pile.count_stack())
+            game_deck.shuffle_stack()
+            round_counter = 1
 
         action = raw_input("\nWhat would you like to do? \n \
                             \n[A] Play a hand \
@@ -143,9 +162,9 @@ def main():
                             \n[C] Exit \n > ").upper()
 
         if action == 'A':
-            setup_hand(game_deck, discard_pile, npc1, player)
+            setup_hand(game_deck, discard_pile, dealer, player)
         elif action == 'B':
-            npc1.print_score()
+            dealer.print_score()
             player.print_score()
 
         elif action == 'C':
