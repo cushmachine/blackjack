@@ -50,6 +50,18 @@ class cardStack(object):
             for rank in RANKS:
                 self.stack.append(Card(rank,suit))
 
+    def shuffle_stack(self):
+        '''
+        Shuffles the deck.
+        '''
+        random.shuffle(self.stack)
+
+    def count_stack(self):
+        '''
+        Returns the number of cards in the stack.
+        '''
+        return len(self.stack)
+
     def print_stack(self):
         '''
         Prints out a sequential list of all cards in the deck. Note that
@@ -57,14 +69,6 @@ class cardStack(object):
         '''
         for i in range(0,len(self.stack)):
             self.stack[i].print_card()
-
-        print "There are %d cards in the stack." % len(self.stack)
-
-    def shuffle_stack(self):
-        '''
-        Shuffles the deck.
-        '''
-        random.shuffle(self.stack)
 
     def deal_cards(self,count):
         '''
@@ -87,13 +91,26 @@ class cardStack(object):
 
     def add_cards_top(self,cards):
         '''
-        Adds card(s) to the top of the deck. Note that we consider the last
-        card on the list to be the "top."
+        Taking CARDS as input, adds card(s) to the top of the deck. Note that we
+        consider the last card on the list to be the "top."
         '''
 
         # Should probably add some guardrails to prevent object of the wrong
         # type from being added
         self.stack.extend(cards)
+
+    def merge_stack(self,target):
+        '''
+        Taking a target STACK as input, combines the cards of target stack with
+        current stack.
+        '''
+
+        #self.stack.add_cards_top(target.deal_cards(count_stack))
+
+        pass
+
+
+
 
     def tally_stack(self):
         '''
@@ -137,6 +154,8 @@ class Player(object):
 
 ''''
 # TODO #
+- Make it so that the cardStack method "deal" takes another cardStack as an
+input. You shouldn't be able to just deal cards into oblivion.
 - Make it so cards played go into the discard pile, which gets shuffled and re-
 added to the deck when the deck runs low.
 - Fix handling of Ace scoring

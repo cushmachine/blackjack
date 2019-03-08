@@ -32,6 +32,7 @@ def setup_hand(deck, discard_pile, npc1, player):
     # After initial hand is dealt, lets players actually play hand
     play_hand(deck, discard_pile, npc1_hand, player_hand, npc1, player)
 
+
 def play_hand(deck, discard_pile, hand1, hand2, npc1, player):
 
     # Locally defines hands
@@ -117,8 +118,6 @@ def play_hand(deck, discard_pile, hand1, hand2, npc1, player):
                 print "You're both still in it."
                 play_hand(deck, discard_pile, hand1, hand2, npc1, player)
                 hand_active = False
-
-
 
 def main():
 
